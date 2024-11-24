@@ -1,10 +1,22 @@
 window.onload = () => {
     // Crear tarjetas
-    // crearTarjetas(filosofos)
+    crearTarjetas(filosofos);
 
     // Crear handlers para los botones de control
+    let botonOrdenarAZ = document.getElementById('ordenAZ');
+    botonOrdenarAZ.addEventListener('click', ordenarNombreAZ)
+
+    let botonOrdenarZA = document.getElementById('ordenZA');
+    botonOrdenarZA.addEventListener('click', ordenarNombreZA)
+
+
     let botonCrearTarjeta = document.querySelector('.create-btn');
     botonCrearTarjeta.addEventListener('click',crearNuevaTarjeta);
+
+    let botonGuardar = document.querySelector('.save-btn');
+    botonGuardar.addEventListener('click', guardarTarjetas)
+
+    
 }
 
 function crearTarjetas(filosofos) {
@@ -34,39 +46,134 @@ function crearTarjetas(filosofos) {
         info.append(filaInfo);
 
         // Añadimos info del país a filaInfo
+        let infoPais = document.createElement('div');
+        infoPais.classList.add('info-pais');
         
+        let bandera = document.createElement('img');
+        let pais = document.createElement('span');
+
+
+
+        bandera.setAttribute('src', filosofo.pais.bandera);
+        bandera.setAttribute('alt', "Bandera de " + filosofo.pais.nombre);
+
+        pais.classList.add('pais');
+        pais.innerHTML = filosofo.pais.nombre;
+
+
+        infoPais.append(bandera, pais);
+
+        filaInfo.append(infoPais);
+
         // Añadimos info de la corriente a filaInfo
         
+        let infoCorriente = document.createElement('div');
+        let corriente = document.createElement('span');
+
+        infoCorriente.classList.add('info-corriente');
+        corriente.classList.add('corriente');
+
+
+        corriente.innerHTML = filosofo.corriente;
+
+        infoCorriente.append("Corriente: ", corriente);
+
+        filaInfo.append(infoCorriente);
+
         // Añadimos info del arma a filaInfo
-        
+
+        let infoArma = document.createElement('div');
+        let arma = document.createElement('span');
+
+        infoArma.classList.add('info-arma');
+        arma.classList.add("arma");
+
+        arma.innerHTML = filosofo.arma;
+
+        infoArma.append("Arma: ", arma);
+
+        filaInfo.append(infoArma);
 
         // Añadimos caja de habilidades
+
+        // <div class="skills">
         let habilidades = document.createElement('div');
         habilidades.classList.add('skills');
         info.append(habilidades);
         // Añadimos una a una las habilidades
+
         for (let infoHabilidad of filosofo.habilidades) {
             // Añadimos una caja de habilidad
-            
+
+             //     <div class="skill">
+            let habilidad = document.createElement('div');
+            habilidad.classList.add('skill');
+    
             // Añadimos contenido caja de habilidad
             // 1.Icono de habilidad
-            
+
+            //         <img src="https://via.placeholder.com/16" alt="Icono de sabiduría">
+
+            let iconoHabilidad = document.createElement('img');
+            iconoHabilidad.setAttribute('src', "https://via.placeholder.com/16");
+            iconoHabilidad.setAttribute('alt', "Icono de " + infoHabilidad.habilidad);
+
+            habilidad.append(iconoHabilidad);
+        
             // 2.Etiqueta de habilidad
-            
+
+            //         <span class="skill-name">Sabiduría</span>
+            let etiquetaHabilidad = document.createElement('span');
+            etiquetaHabilidad.classList.add('skill-name');
+
+            etiquetaHabilidad.innerHTML = infoHabilidad.habilidad;
+
+            habilidad.append(etiquetaHabilidad);
+
             // 2.Barra de habilidad
-            
+
+//         <div class="skill-bar">
+//             <div class="level" style="width: 90%;"></div>
+//         </div>
+
+            let barra = document.createElement('div');
+            barra.classList.add('skill-bar');
+
+            let nivel = document.createElement('div');
+            nivel.classList.add('level');
+
+            nivel.setAttribute('style', `width: ${infoHabilidad.nivel / 4 * 100}%;`);
+
+            barra.append(nivel);
+            habilidad.append(barra);
+
+            habilidades.append(habilidad);            
         }
 
+        let botonEliminar = document.createElement('div');
+        botonEliminar.innerHTML = "&#x2716";
+        botonEliminar.classList.add('botonEliminar');
+    
+        botonEliminar.addEventListener('click', eliminarTarjeta);
+
+
+        tarjeta.append(botonEliminar);
+
+
+        
         // Añadimos tarjeta creada al contenedor de tarjetas
         let contenedor = document.querySelector('.cards-container');
         contenedor.append(tarjeta);
     })
 }
 
-function eliminarTarjeta() {
+function eliminarTarjeta(event) {
+    event.target.parentElement.remove();
+    
 }
 
 function ordenarNombreAZ() {
+    
     let tarjetas = Array.from(document.querySelectorAll('.card'));
     let tarjetasOrdenadas = tarjetas.sort((tarjetaA, tarjetaB) => {
         let nombre1 = tarjetaA.querySelector('h3').innerHTML;
@@ -74,27 +181,78 @@ function ordenarNombreAZ() {
         return nombre1.localeCompare(nombre2);
     });
 
+
     // Eliminar totes les targetes de l'array 'tarjeta'
     // Completar codi
 
     // Afegir 'tarjetasOrdenadas' al contenidor de cards
     let contenedor = document.querySelector('.cards-container');
+
+    contenedor.innerHTML = '';
+    for (let tarjetas of tarjetasOrdenadas){
+        contenedor.append(tarjetas);
+    }
+
     // Completar codi
 }
 
 function ordenarNombreZA() {
+    let tarjetas = Array.from(document.querySelectorAll('.card'));
+    let tarjetasOrdenadas = tarjetas.sort((tarjetaA, tarjetaB) => {
+        let nombre1 = tarjetaA.querySelector('h3').innerHTML;
+        let nombre2 = tarjetaB.querySelector('h3').innerHTML;
+        return nombre2.localeCompare(nombre1);
+    });
+
+    let contenedor = document.querySelector('.cards-container');
+
+    contenedor.innerHTML = '';
+    for (let tarjetas of tarjetasOrdenadas){
+        contenedor.append(tarjetas);
+    }
+
 }
 
 function crearNuevaTarjeta(event) {
     event.preventDefault();
-    let nuevoFilosofo = {};
-    nuevoFilosofo.nombre = document.querySelector('.create-card-form .nombre').value;
-    nuevoFilosofo.imagen = document.querySelector('.create-card-form .foto').value;
-    nuevoFilosofo.pais = {};
-    nuevoFilosofo.pais.nombre = document.querySelector('.create-card-form .pais').value;
+    let nuevoFilosofo = {
+        nombre: document.getElementsByClassName('nombre')[0].value,
+        imagen: document.getElementsByClassName('foto')[0].value,
+        pais: {
+            nombre: document.getElementsByClassName('pais')[0].value,
+            bandera: document.getElementsByClassName('bandera')[0].value,
+        },
+        corriente: document.getElementsByClassName('corriente')[0].value,
+        arma: document.getElementsByClassName('arma')[0].value,
+
+        habilidades: [{
+            habilidad: document.getElementsByClassName('skills')[0].value,
+            nivel: document.getElementsByClassName('skills')[0].value
+        },
+        {
+            habilidad: document.getElementsByClassName('skills')[0].value,
+            nivel: document.getElementsByClassName('skills')[0].value
+        },
+        {
+            habilidad: document.getElementsByClassName('skills')[0].value,
+            nivel: document.getElementsByClassName('skills')[0].value
+        },
+        {
+            habilidad: document.getElementsByClassName('skills')[0].value,
+            nivel: document.getElementsByClassName('skills')[0].value
+        }]
+        
+    };
+    // nuevoFilosofo.nombre = document.querySelector('.create-card-form .nombre').value;
+    // nuevoFilosofo.imagen = document.querySelector('.create-card-form .foto').value;
+    // nuevoFilosofo.pais = {};
+    // nuevoFilosofo.pais.nombre = document.querySelector('.create-card-form .pais').value;
     // Completar la función
 
-    // crearTarjetas(nuevoFilosofo);
+    let filosofos = [];
+    filosofos.push(nuevoFilosofo);
+
+    crearTarjetas(filosofos);
 }
 
 function parsearTarjetas(tarjetas){
@@ -119,6 +277,7 @@ function parsearTarjetas(tarjetas){
 function guardarTarjetas(){
     let tarjetas = Array.from(document.querySelectorAll('.card'));
     localStorage.setItem('tarjetas',JSON.stringify(parsearTarjetas(tarjetas)));
+    console.log('Tarjetas guardadas')
 }
 
 
